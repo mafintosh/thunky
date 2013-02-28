@@ -70,7 +70,9 @@ run(function(err) { // 'running' is printed again
 });
 ```
 
-A great usecase for memolite is doing lazy operations.
+## Lazy evaluation
+
+memolite makes it easy to implement a lazy evaluation pattern.
 
 ``` js
 var makeFolder = memolite(function(callback) {
