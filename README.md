@@ -32,9 +32,6 @@ random(function(num) {
 If you wanted to do a file reader that only read files once and remembered the result you would do
 
 ``` js
-var memolite = require('memolite');
-var fs = require('fs');
-
 var fileReader = function(filename) {
 	return memolite(function(callback) {
 		console.log('reading '+filename);
