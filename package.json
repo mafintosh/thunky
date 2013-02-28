@@ -1,0 +1,13 @@
+{
+  "name": "memolite",
+  "version": "0.1.0",
+  "repository": "git://github.com/mafintosh/memolite",
+  "description": "extremly simple memoizing for async functions",
+  "keywords": [
+    "memo",
+    "memoize",
+    "async",
+    "simple"
+  ],
+  "author": "Mathias Buus Madsen <mathiasbuus@gmail.com>"
+}
