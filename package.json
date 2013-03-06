@@ -1,13 +1,16 @@
 {
-  "name": "memolite",
+  "name": "thunky",
   "version": "0.1.0",
-  "repository": "git://github.com/mafintosh/memolite",
-  "description": "extremly simple memoizing for async functions",
+  "repository": "git://github.com/mafintosh/thunky",
+  "description": "delay the evaluation of a paramless async function and cache the result",
   "keywords": [
     "memo",
-    "memoize",
+    "thunk",
     "async",
-    "simple"
+    "lazy",
+    "control",
+    "flow",
+    "cache"
   ],
   "author": "Mathias Buus Madsen <mathiasbuus@gmail.com>"
 }

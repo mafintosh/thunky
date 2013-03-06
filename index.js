@@ -2,11 +2,11 @@ var isError = function(err) { // inlined from util so this works in the browser
 	return Object.prototype.toString.call(err) === '[object Error]';
 };
 
-var memolite = function(fn) {
+var thunky = function(fn) {
 	var run = function(callback) {
 		var stack = [callback];
 
-		action = function(callback) {
+		state = function(callback) {
 			stack.push(callback);
 		};
 
@@ -16,16 +16,16 @@ var memolite = function(fn) {
 				if (callback) callback.apply(null, args);
 			};
 
-			action = isError(err) ? run : apply;
+			state = isError(err) ? run : apply;
 			while (stack.length) apply(stack.shift());
 		});
 	};
 
-	var action = run;
+	var state = run;
 
 	return function(callback) {
-		action(callback);
+		state(callback);
 	};
 };
 
-module.exports = memolite;
+module.exports = thunky;
