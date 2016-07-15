@@ -13,10 +13,14 @@ var thunky = function(fn) {
 		fn(function(err) {
 			var args = arguments;
 			var apply = function(callback) {
+				if (callback) callback.apply(null, args);
+			};
+
+			var applyNextTick = function(callback) {
 				if (callback) process.nextTick(function () { callback.apply(null, args); });
 			};
 
-			state = isError(err) ? run : apply;
+			state = isError(err) ? run : applyNextTick;
 			while (stack.length) apply(stack.shift());
 		});
 	};
