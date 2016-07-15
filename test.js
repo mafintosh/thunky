@@ -1,5 +1,5 @@
 var tape = require('tape')
-var thunky = require('thunky')
+var thunky = require('./')
 
 tape('run only once', function (t) {
   t.plan(3)
