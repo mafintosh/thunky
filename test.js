@@ -85,3 +85,38 @@ tape('pass arguments', function (t) {
     })
   })
 })
+
+tape('callback is optional', function (t) {
+  t.plan(2)
+
+  var ran = 0
+  var run = thunky(function (cb) {
+    ran++
+    cb({hello: 'world'})
+  })
+
+  run()
+  run(function (val) {
+    t.same(ran, 1, 'ran once')
+    t.same(val, {hello: 'world'})
+  })
+})
+
+tape('always async', function (t) {
+  t.plan(2)
+
+  var run = thunky(function (cb) {
+    process.nextTick(cb)
+  })
+
+  var sync = true
+  run(function () {
+    t.ok(!sync, 'not sync')
+    var innerSync = true
+    run(function () {
+      t.ok(!innerSync, 'not sync')
+    })
+    innerSync = false
+  })
+  sync = false
+})
