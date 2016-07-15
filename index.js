@@ -16,7 +16,11 @@ var thunky = function(fn) {
 				if (callback) callback.apply(null, args);
 			};
 
-			state = isError(err) ? run : apply;
+			var applyNextTick = function(callback) {
+				if (callback) process.nextTick(function () { callback.apply(null, args); });
+			};
+
+			state = isError(err) ? run : applyNextTick;
 			while (stack.length) apply(stack.shift());
 		});
 	};
