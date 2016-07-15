@@ -1,35 +1,48 @@
-var isError = function(err) { // inlined from util so this works in the browser
-	return Object.prototype.toString.call(err) === '[object Error]';
-};
+module.exports = thunky
 
-var thunky = function(fn) {
-	var run = function(callback) {
-		var stack = [callback];
+function thunky (fn) {
+  var state = run
+  return thunk
 
-		state = function(callback) {
-			stack.push(callback);
-		};
+  function thunk (callback) {
+    state(callback || noop)
+  }
 
-		fn(function(err) {
-			var args = arguments;
-			var apply = function(callback) {
-				if (callback) callback.apply(null, args);
-			};
+  function run (callback) {
+    var stack = [callback]
+    state = wait
+    fn(done)
 
-			var applyNextTick = function(callback) {
-				if (callback) process.nextTick(function () { callback.apply(null, args); });
-			};
+    function wait (callback) {
+      stack.push(callback)
+    }
 
-			state = isError(err) ? run : applyNextTick;
-			while (stack.length) apply(stack.shift());
-		});
-	};
+    function done (err) {
+      var args = arguments
+      var apply = applier(args)
 
-	var state = run;
+      state = isError(err) ? run : apply
+      while (stack.length) stack.shift().apply(null, args)
+    }
+  }
+}
 
-	return function(callback) {
-		state(callback);
-	};
-};
+function applier (args) {
+  return args.length ? applyArgs : applyNoArgs
 
-module.exports = thunky;
+  function applyArgs (callback) {
+    process.nextTick(function () {
+      callback.apply(null, args)
+    })
+  }
+
+  function applyNoArgs (callback) {
+    process.nextTick(callback)
+  }
+}
+
+function isError (err) { // inlined from util so this works in the browser
+  return Object.prototype.toString.call(err) === '[object Error]'
+}
+
+function noop () {}
