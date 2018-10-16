@@ -4,8 +4,8 @@
   "description": "delay the evaluation of a paramless async function and cache the result",
   "main": "index.js",
   "devDependencies": {
-    "standard": "^7.1.2",
-    "tape": "^4.6.0"
+    "standard": "^12.0.1",
+    "tape": "^4.9.1"
   },
   "repository": {
     "type": "git",
