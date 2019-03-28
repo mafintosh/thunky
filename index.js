@@ -10,13 +10,24 @@ function thunky (fn) {
   return thunk
 
   function thunk (callback) {
+    var promise
+    if (!callback) {
+      promise = new Promise((resolve, reject) => {
+        callback = err => err ? reject(err) : resolve()
+      })
+    }
     state(callback || noop)
+    return promise
   }
 
   function run (callback) {
     var stack = [callback]
     state = wait
-    fn(done)
+    var ret = fn(done)
+
+    if (isPromise(ret)) {
+      ret.then(res => done(null, res)).catch(err => done(err))
+    }
 
     function wait (callback) {
       stack.push(callback)
@@ -52,4 +63,8 @@ function nextTickArgs (fn, a, b) {
   process.nextTick(function () {
     fn(a, b)
   })
+}
+
+function isPromise (obj) {
+  return !!obj && (typeof obj === 'object' || typeof obj === 'function') && typeof obj.then === 'function'
 }

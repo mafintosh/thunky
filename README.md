@@ -76,6 +76,30 @@ fails(function (err) { // inner function is called again as it returned an error
 })
 ```
 
+## Promises
+
+* The worker function passed to thunky can return a promise instead of accepting a `done` callback. The promise will be run
+  and awaited once.
+* The returned thunk can be awaited instead of being accessed via a callback.
+
+```js
+  // These are equal:
+  const ready = thunky(function (done) {
+    someAsyncFunction().then(done)
+  }
+  const ready = thunky(async () {
+    return someAsyncFunction()
+  }
+
+  // These are also equal:
+  ready(() => console.log('ready!'))
+  ready().then(() => console.log('ready!')
+
+  // or in an async function
+  await ready()
+  console.log('ready!')
+```
+
 ## License
 
 MIT
