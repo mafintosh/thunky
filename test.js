@@ -134,16 +134,26 @@ tape('await a thunk', async function (t) {
   t.end()
 })
 
-tape('promise inside', async function (t) {
+tape('await a promise', async function (t) {
+  t.plan(2)
   let ran = 0
+  let done
+  let promise = new Promise((resolve, reject) => {
+    done = () => resolve()
+  })
+
   const ready = thunky(async () => {
+    await promise
     ran++
   })
+
   ready(() => {
     t.same(ran, 1)
-    ready().then(() => {
-      t.same(ran, 1)
-      t.end()
-    })
+  })
+
+  done()
+
+  ready(() => {
+    t.same(ran, 1)
   })
 })
