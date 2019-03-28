@@ -120,3 +120,40 @@ tape('always async', function (t) {
   })
   sync = false
 })
+
+tape('await a thunk', async function (t) {
+  let ran = 0
+  const ready = thunky(done => process.nextTick(() => {
+    ran++
+    done()
+  }))
+  await ready()
+  t.same(ran, 1)
+  await ready()
+  t.same(ran, 1)
+  t.end()
+})
+
+tape('await a promise', async function (t) {
+  t.plan(2)
+  let ran = 0
+  let done
+  let promise = new Promise((resolve, reject) => {
+    done = () => resolve()
+  })
+
+  const ready = thunky(async () => {
+    await promise
+    ran++
+  })
+
+  ready(() => {
+    t.same(ran, 1)
+  })
+
+  done()
+
+  ready(() => {
+    t.same(ran, 1)
+  })
+})
